@@ -1,0 +1,84 @@
+pipeline:
+  name: Deploy MERN Server
+  identifier: Deploy_MERN_Server
+  projectIdentifier: communityeng
+  orgIdentifier: default
+  tags: {}
+  stages:
+    - stage:
+        name: MERN Server
+        identifier: MERN_Server
+        description: ""
+        type: Deployment
+        spec:
+          serviceConfig:
+            serviceRef: MERN_Server
+            serviceDefinition:
+              spec:
+                variables: []
+                manifests:
+                  - manifest:
+                      identifier: server
+                      type: K8sManifest
+                      spec:
+                        store:
+                          type: Github
+                          spec:
+                            connectorRef: mernharness
+                            gitFetchType: Branch
+                            paths:
+                              - server-manifest.yaml
+                            branch: main
+                        skipResourceVersioning: false
+                  - manifest:
+                      identifier: serverValues
+                      type: Values
+                      spec:
+                        store:
+                          type: Github
+                          spec:
+                            connectorRef: mernharness
+                            gitFetchType: Branch
+                            paths:
+                              - server-manifest-values.yaml
+                            branch: main
+                artifacts:
+                  primary:
+                    spec:
+                      connectorRef: merndeba
+                      imagePath: debabratapanigrahi/mern-server
+                      tag: <+input>
+                    type: DockerRegistry
+              type: Kubernetes
+          infrastructure:
+            environmentRef: demo
+            infrastructureDefinition:
+              type: KubernetesDirect
+              spec:
+                connectorRef: k8sconnector
+                namespace: demo
+                releaseName: release-<+INFRA_KEY>
+            allowSimultaneousDeployments: false
+          execution:
+            steps:
+              - step:
+                  name: Rollout Deployment
+                  identifier: rolloutDeployment
+                  type: K8sRollingDeploy
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Rollback Rollout Deployment
+                  identifier: rollbackRolloutDeployment
+                  type: K8sRollingRollback
+                  timeout: 10m
+                  spec: {}
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
