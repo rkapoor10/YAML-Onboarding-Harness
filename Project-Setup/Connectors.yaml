@@ -1,0 +1,17 @@
+connector:
+  name: mern-deba-2
+  identifier: merndeba2
+  orgIdentifier: default
+  projectIdentifier: communityeng
+  type: DockerRegistry
+  spec:
+    dockerRegistryUrl: https://registry.hub.docker.com/v2/
+    providerType: DockerHub
+    auth:
+      type: UsernamePassword
+      spec:
+        username: debabratapanigrahi
+        passwordRef: dockerpassword
+    delegateSelectors:
+      - qa-target-delegate
+    executeOnDelegate: true
