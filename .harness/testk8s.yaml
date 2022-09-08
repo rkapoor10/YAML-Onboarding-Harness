@@ -12,7 +12,7 @@ pipeline:
         type: Deployment
         spec:
           serviceConfig:
-            serviceRef: k8sservice
+            serviceRef: k8service
             serviceDefinition:
               spec:
                 variables: []
@@ -57,7 +57,7 @@ pipeline:
             infrastructureDefinition:
               type: KubernetesDirect
               spec:
-                connectorRef: k8testclustercanary
+                connectorRef: test
                 namespace: default
                 releaseName: release-<+INFRA_KEY>
             allowSimultaneousDeployments: false
