@@ -3,13 +3,11 @@ connector:
   identifier: harnessdocker
   description: ""
   orgIdentifier: default
-  projectIdentifier: Harnesspractise
+  projectIdentifier: communityeng
   type: DockerRegistry
   spec:
     dockerRegistryUrl: https://registry.hub.docker.com/v2/
     providerType: Other
     auth:
       type: Anonymous
-    delegateSelectors:
-      - testdelegate
     executeOnDelegate: true
