@@ -1,7 +1,7 @@
 pipeline:
   name: testk8
   identifier: testk8
-  projectIdentifier: Harnesspractise
+  projectIdentifier: newpipeline
   orgIdentifier: default
   tags: {}
   stages:
