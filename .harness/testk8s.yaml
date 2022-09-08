@@ -12,7 +12,7 @@ pipeline:
         type: Deployment
         spec:
           serviceConfig:
-            serviceRef: k8service
+            serviceRef: k8sservice
             serviceDefinition:
               spec:
                 variables: []
@@ -24,10 +24,11 @@ pipeline:
                         store:
                           type: Github
                           spec:
-                            connectorRef: gitpractise
+                            connectorRef: testhelp
                             gitFetchType: Branch
                             paths:
                               - default-k8s-manifests/Manifests/Files/templates
+                            repoName: harness-docs
                             branch: main
                         skipResourceVersioning: false
                   - manifest:
@@ -37,10 +38,11 @@ pipeline:
                         store:
                           type: Github
                           spec:
-                            connectorRef: gitpractise
+                            connectorRef: testhelp
                             gitFetchType: Branch
                             paths:
                               - default-k8s-manifests/Manifests/Files/ng_values_dockercfg.yaml
+                            repoName: harness-docs
                             branch: main
                 artifacts:
                   primary:
