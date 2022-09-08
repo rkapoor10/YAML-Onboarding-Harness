@@ -1,0 +1,84 @@
+pipeline:
+  name: testk8
+  identifier: testk8
+  projectIdentifier: Harnesspractise
+  orgIdentifier: default
+  tags: {}
+  stages:
+    - stage:
+        name: k8deploy
+        identifier: k8deploy
+        description: ""
+        type: Deployment
+        spec:
+          serviceConfig:
+            serviceRef: k8service
+            serviceDefinition:
+              spec:
+                variables: []
+                manifests:
+                  - manifest:
+                      identifier: manifest
+                      type: K8sManifest
+                      spec:
+                        store:
+                          type: Github
+                          spec:
+                            connectorRef: gitpractise
+                            gitFetchType: Branch
+                            paths:
+                              - default-k8s-manifests/Manifests/Files/templates
+                            branch: main
+                        skipResourceVersioning: false
+                  - manifest:
+                      identifier: values
+                      type: Values
+                      spec:
+                        store:
+                          type: Github
+                          spec:
+                            connectorRef: gitpractise
+                            gitFetchType: Branch
+                            paths:
+                              - default-k8s-manifests/Manifests/Files/ng_values_dockercfg.yaml
+                            branch: main
+                artifacts:
+                  primary:
+                    spec:
+                      connectorRef: harnessdocker
+                      imagePath: library/nginx
+                      tag: <+input>
+                    type: DockerRegistry
+              type: Kubernetes
+          infrastructure:
+            environmentRef: K8Env
+            infrastructureDefinition:
+              type: KubernetesDirect
+              spec:
+                connectorRef: k8testclustercanary
+                namespace: default
+                releaseName: release-<+INFRA_KEY>
+            allowSimultaneousDeployments: false
+          execution:
+            steps:
+              - step:
+                  name: Rollout Deployment
+                  identifier: rolloutDeployment
+                  type: K8sRollingDeploy
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Rollback Rollout Deployment
+                  identifier: rollbackRolloutDeployment
+                  type: K8sRollingRollback
+                  timeout: 10m
+                  spec: {}
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
