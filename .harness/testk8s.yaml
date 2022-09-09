@@ -48,7 +48,7 @@ pipeline:
                   primary:
                     spec:
                       connectorRef: harnessdocker
-                      imagePath: library/nginx
+                      imagePath: <+input>
                       tag: <+input>
                     type: DockerRegistry
               type: Kubernetes
