@@ -1,7 +1,7 @@
 pipeline:
   name: Deploy MERN Server
   identifier: Deploy_MERN_Server
-  projectIdentifier: test-YAMLOnboarding
+  projectIdentifier: testYAMLOnboarding
   orgIdentifier: default
   tags: {}
   stages:
